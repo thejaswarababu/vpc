@@ -1,3 +1,3 @@
 locals {
-  vpc_id = aws_vpc.main.id
+  azs = slice(data.aws_availability_zones.azs,count.index,0,2)
 }
