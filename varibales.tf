@@ -56,3 +56,10 @@ variable "database_subnet_cidr" {
     error_message = "Please provide 2 database subnet CIDR"
   }
 }
+
+variable "nat_gateway_tags" {
+  default = {
+    
+  }
+  
+}

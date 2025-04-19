@@ -67,3 +67,86 @@ resource "aws_subnet" "database" {
   )
 }
 
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+var.common_tags,
+{
+  Name = "${var.project_name}-${var.env}-public"
+}
+
+
+  )
+  
+}
+
+resource "aws_route" "public" {
+route_table_id = aws_route_table.public.id
+destination_cidr_block = "0.0.0.0/0"
+gateway_id = aws_internet_gateway.main.id
+  
+}
+
+resource "aws_eip" "eip" {
+  domain = "vpc"
+  
+}
+
+resource "aws_nat_gateway" "main" {
+allocation_id = aws_eip.eip.id
+subnet_id = aws_subnet.public[0].id
+
+
+tags = merge(
+  var.common_tags,{
+    Name ="${var.project_name}-${var.env}"
+  },
+  var.nat_gateway_tags
+)
+  depends_on = [ aws_internet_gateway.main ]
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+var.common_tags,
+{
+  Name = "${var.project_name}-${var.env}-private"
+}
+
+
+  )
+  
+}
+
+resource "aws_route" "private" {
+route_table_id = aws_route_table.private.id
+destination_cidr_block = "0.0.0.0/0"
+nat_gateway_id = aws_nat_gateway.main.id
+  
+}
+
+
+resource "aws_route_table" "database" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+var.common_tags,
+{
+  Name = "${var.project_name}-${var.env}-database"
+}
+
+
+  )
+  
+}
+
+resource "aws_route" "database" {
+route_table_id = aws_route_table.databse.id
+destination_cidr_block = "0.0.0.0/0"
+nat_gateway_id = aws_nat_gateway.main.id
+  
+}
