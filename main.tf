@@ -168,8 +168,8 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_route_table_association" "database" {
   count = length(var.database_subnet_cidr)
-  route_table_id = aws_route_table.databse.id
-  subnet_id = element(aws_subnet.databse[*].id, count.index)
+  route_table_id = aws_route_table.database.id
+  subnet_id = element(aws_subnet.database[*].id, count.index)
   
 }
 
