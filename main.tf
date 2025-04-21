@@ -173,3 +173,22 @@ resource "aws_route_table_association" "database" {
   
 }
 
+
+
+resource "aws_db_subnet_group" "default" {
+  
+  name       = var.database_group
+  subnet_ids = aws_subnet.database[*].id
+
+  tags = merge(
+    var.common_tags,
+    {  
+      Name = "${var.project_name}-${var.env}"
+
+    }
+  )
+}
+
+
+
+

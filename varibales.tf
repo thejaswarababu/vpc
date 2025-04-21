@@ -63,3 +63,10 @@ variable "nat_gateway_tags" {
   }
   
 }
+
+
+variable "database_group" {
+
+  type = string
+  
+}
